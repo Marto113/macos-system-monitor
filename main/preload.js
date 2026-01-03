@@ -30,7 +30,7 @@ contextBridge.exposeInMainWorld('api', {
               resolve({
                 totalCpu,
                 cpuCores,
-                usagePercent: usage.toFixed(2)
+                usagePercent: Math.round(usage * 100) / 100
               })
             }
           )

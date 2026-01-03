@@ -41,7 +41,6 @@ window.addEventListener("DOMContentLoaded", async () => {
       labels: cpuLabels,
       datasets: [
         {
-          label: "CPU Usage (%)",
           data: cpuData,
           borderColor: "rgb(75, 192, 192)",
           backgroundColor: "rgba(75, 192, 192, 0.2)",
@@ -61,6 +60,20 @@ window.addEventListener("DOMContentLoaded", async () => {
           suggestedMin: 0,
           suggestedMax: 100
         }
+      },
+      plugins: {
+        legend: {
+          display: false
+        },
+        title: {
+          display: true,
+          text: "CPU Usage (%)",
+          color: "#ffffff",
+          font: {
+            size: 14,
+            weight: "500"
+          }
+        }
       }
     }
   });
@@ -75,7 +88,6 @@ window.addEventListener("DOMContentLoaded", async () => {
       labels: memLabels,
       datasets: [
         {
-          label: "Memmory Usage (GB)",
           data: memData,
           borderColor: "rgba(236, 113, 91, 1)",
           backgroundColor: "rgba(75, 192, 192, 0.2)",
@@ -92,8 +104,22 @@ window.addEventListener("DOMContentLoaded", async () => {
         y: {
           min: 0
         }
+      },  
+      plugins: {
+        legend: {
+          display: false
+        },
+        title: {
+          display: true,
+          text: "Memory Usage (GB)",
+          color: "#ffffff",
+          font: {
+            size: 14,
+            weight: "500"
+          }
+        }
       }
-    }
+    },
   });
   
   // handle CPU chart data

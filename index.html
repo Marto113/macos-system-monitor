@@ -5,24 +5,25 @@
   <title>macOS System Monitor</title>
 </head>
 <body>
+  <link rel="stylesheet" href="./styles/app.css">
   <h1>System Monitor</h1>
 
   <div id="cpu-model">Loading CPU info...</div>
   <div id="cpu">Loading CPU info...</div>
   <div id="memory">Loading memory info...</div>
 
-  <div style="height: 200px;">
-    <canvas id="cpuChart"></canvas>
+
+  <div class="chart-container">
+    <div class="chart">
+        <canvas id="cpuChart"></canvas>
+    </div>
+
+    <div class="chart">
+        <canvas id="memChart"></canvas>
+    </div>
   </div>
 
-  <div style="height: 200px;">
-    <canvas id="memChart"></canvas>
-  </div>
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
-
   <script type="module" src="./renderer/renderer.js"></script>
-
-
-
 </body>
 </html>

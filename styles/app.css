@@ -1,0 +1,48 @@
+:root {
+  --gray-300: #9A9A9A;
+  --gray-700: #393939;
+  --gray-800: #282828;
+  --gray-950: #0D0D0D;
+  --accent-cpu: #4bc0c0;
+  --accent-mem: #ec715b;
+}
+
+body {
+  margin: 0;
+  background: var(--gray-950);
+  color: var(--gray-300);
+  font-family: system-ui, -apple-system, sans-serif;
+  margin: 32px;
+}
+
+h1 {
+  margin-top: 0;
+}
+
+.chart {
+  height: 200px;
+  border-radius: 16px;
+  background-color: var(--gray-700);
+  padding: 12px;
+  width: calc(50% - 8px);
+}
+@media screen and (max-width: 768px) {
+  .chart {
+    width: 100%;
+  }
+}
+
+.chart-container {
+  width: 100%;
+  margin-top: 32px;
+  display: flex;
+  flex-direction: row;
+  gap: 16px;
+}
+@media screen and (max-width: 768px) {
+  .chart-container {
+    flex-direction: column;
+  }
+}
+
+/*# sourceMappingURL=app.css.map */

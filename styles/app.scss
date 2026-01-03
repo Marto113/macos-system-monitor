@@ -1,0 +1,37 @@
+@use "variables";
+
+body {
+  margin: 0;
+  background: var(--gray-950);
+  color: var(--gray-300);
+  font-family: system-ui, -apple-system, sans-serif;
+  margin: 32px;
+}
+
+h1 {
+    margin-top: 0;
+}
+
+.chart {
+  height: 200px;
+  border-radius: 16px;
+  background-color: var(--gray-700);
+  padding: 12px;
+  width: calc(50% - 8px);
+    
+  @media screen and (max-width: 768px) {
+    width: 100%;
+  }
+}
+
+.chart-container {
+    width: 100%;
+    margin-top: 32px;
+    display: flex;
+    flex-direction: row;
+    gap: 16px;
+
+    @media screen and (max-width: 768px) {
+        flex-direction: column;
+    }
+}

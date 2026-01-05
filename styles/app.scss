@@ -17,19 +17,28 @@ h1 {
   border-radius: 16px;
   background-color: var(--gray-700);
   padding: 12px;
-  width: calc(50% - 8px);
-    
+  width: calc(50% - 40px);
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  
   @media screen and (max-width: 768px) {
-    width: 100%;
+    width: calc(100% - 20px);
+  }
+
+  canvas {
+    max-width:100%;
+    min-height: 100%;
   }
 }
 
 .chart-container {
+    gap: 32px;
     width: 100%;
     margin-top: 32px;
     display: flex;
     flex-direction: row;
-    gap: 16px;
 
     @media screen and (max-width: 768px) {
         flex-direction: column;

@@ -10,9 +10,10 @@ window.addEventListener("DOMContentLoaded", async () => {
   const memEl = document.getElementById("memory");
   const cpuCanvas = document.getElementById("cpuChart");
   const memCanvas = document.getElementById("memChart");
+  const memDoughnutCanvas = document.getElementById("memChartDoughnut");
 
 
-  if (!cpuEl || !cpuModelEl || !memEl || !cpuCanvas || !memCanvas) {
+  if (!cpuEl || !cpuModelEl || !memEl || !cpuCanvas || !memCanvas || !memDoughnutCanvas) {
     console.error("Missing DOM elements");
     return;
   }
@@ -30,7 +31,23 @@ window.addEventListener("DOMContentLoaded", async () => {
 
   cpuModelEl.textContent = `CPU: ${cpuInfo[0].model}`;
 
-  // load chart
+  // chart colors
+  const CHART_COLORS = {
+    cpu: {
+      line: "#4DD0E1",
+      fill: "rgba(77, 208, 225, 0.25)"
+    },
+    memory: {
+      line: "#FF8A65",
+      fill: "rgba(255, 138, 101, 0.25)"
+    },
+    text: "#E6E6E6",
+    grid: "rgba(255,255,255,0.08)",
+    ticks: "rgba(230,230,230,0.7)"
+  };
+
+  // ---------------- CPU LINE CHART ----------------
+
   const MAX_POINTS = 60;
   const cpuData = [];
   const cpuLabels = [];
@@ -39,15 +56,13 @@ window.addEventListener("DOMContentLoaded", async () => {
     type: "line",
     data: {
       labels: cpuLabels,
-      datasets: [
-        {
-          data: cpuData,
-          borderColor: "rgb(75, 192, 192)",
-          backgroundColor: "rgba(75, 192, 192, 0.2)",
-          tension: 0.3,
-          pointRadius: 2
-        }
-      ]
+      datasets: [{
+        data: cpuData,
+        borderColor: CHART_COLORS.cpu.line,
+        backgroundColor: CHART_COLORS.cpu.fill,
+        tension: 0.3,
+        pointRadius: 2
+      }]
     },
     options: {
       animation: false,
@@ -57,18 +72,24 @@ window.addEventListener("DOMContentLoaded", async () => {
         y: {
           min: 0,
           max: 100,
-          suggestedMin: 0,
-          suggestedMax: 100
+          ticks: {
+            color: CHART_COLORS.ticks
+          },
+          grid: {
+            color: CHART_COLORS.grid
+          }
+        },
+        x: {
+          ticks: { display: false },
+          grid: { display: false }
         }
       },
       plugins: {
-        legend: {
-          display: false
-        },
+        legend: { display: false },
         title: {
           display: true,
           text: "CPU Usage (%)",
-          color: "#ffffff",
+          color: CHART_COLORS.text,
           font: {
             size: 14,
             weight: "500"
@@ -78,6 +99,8 @@ window.addEventListener("DOMContentLoaded", async () => {
     }
   });
 
+  // ---------------- MEMORY LINE CHART ----------------
+
   const MAX_POINTS_MEM = 12;
   const memData = [];
   const memLabels = [];
@@ -86,15 +109,13 @@ window.addEventListener("DOMContentLoaded", async () => {
     type: "line",
     data: {
       labels: memLabels,
-      datasets: [
-        {
-          data: memData,
-          borderColor: "rgba(236, 113, 91, 1)",
-          backgroundColor: "rgba(75, 192, 192, 0.2)",
-          tension: 0.3,
-          pointRadius: 2
-        }
-      ]
+      datasets: [{
+        data: memData,
+        borderColor: CHART_COLORS.memory.line,
+        backgroundColor: CHART_COLORS.memory.fill,
+        tension: 0.3,
+        pointRadius: 2
+      }]
     },
     options: {
       animation: false,
@@ -102,27 +123,78 @@ window.addEventListener("DOMContentLoaded", async () => {
       maintainAspectRatio: false,
       scales: {
         y: {
-          min: 0
-        }
-      },  
-      plugins: {
-        legend: {
-          display: false
+          min: 0,
+          ticks: {
+            color: CHART_COLORS.ticks
+          },
+          grid: {
+            color: CHART_COLORS.grid
+          }
         },
+        x: {
+          ticks: { display: false },
+          grid: { display: false }
+        }
+      },
+      plugins: {
+        legend: { display: false },
         title: {
           display: true,
           text: "Memory Usage (GB)",
-          color: "#ffffff",
+          color: CHART_COLORS.text,
           font: {
             size: 14,
             weight: "500"
           }
         }
       }
-    },
+    }
   });
-  
-  // handle CPU chart data
+
+  // ---------------- MEMORY DOUGHNUT CHART ----------------
+
+  const memDataDoughnut = [0, 0];
+  const memLabelsDoughnut = ["Used", "Free"];
+
+  const memChartDoughnut = new window.Chart(memDoughnutCanvas, {
+    type: "doughnut",
+    data: {
+      labels: memLabelsDoughnut,
+      datasets: [{
+        data: memDataDoughnut,
+        backgroundColor: [
+          CHART_COLORS.memory.line,
+          CHART_COLORS.cpu.line
+        ],
+        borderWidth: 0
+      }]
+    },
+    options: {
+      animation: false,
+      responsive: true,
+      plugins: {
+        legend: {
+          position: "bottom",
+          labels: {
+            color: CHART_COLORS.text
+          }
+        },
+        title: {
+          display: true,
+          text: "Memory Distribution",
+          color: CHART_COLORS.text,
+          font: {
+            size: 14,
+            weight: "500"
+          }
+        }
+      }
+    }
+  });
+
+  // ---------------- HANDLE DATASET FUNCTIONS ----------------
+
+  // ---------------- CPU LINE DATASET ----------------
   function addCpuPoint(value) {
     if (!Number.isFinite(value)) return;
 
@@ -137,12 +209,17 @@ window.addEventListener("DOMContentLoaded", async () => {
     cpuChart.update("none");
   }
 
-  // handle MEMORY chart data
+  // ---------------- MEMORY LINE DATASET ----------------
   function addMemPoint(value) {
     if (!Number.isFinite(value)) return;
 
     memData.push(value);
     memLabels.push("");
+
+    if(memData.length === 1) {
+      memData.push(value);
+      memLabels.push("");
+    }
 
     if (memData.length > MAX_POINTS_MEM) {
       memData.shift();
@@ -151,7 +228,18 @@ window.addEventListener("DOMContentLoaded", async () => {
 
     memChart.update("none");
   }
+  
+  // ---------------- MEMORY DOUGHNUT DATASET ----------------
+  function addMemPointDoughnut(used, free) {
+    if (!Number.isFinite(used) || !Number.isFinite(free)) return;
 
+    memDataDoughnut[0] = used;
+    memDataDoughnut[1] = free;
+
+    memChartDoughnut.update("none");
+  }
+
+  // ---------------- SEND OVER DATA ----------------
   let updatingCpu = false;
   let updatingMem = false;
 
@@ -189,6 +277,7 @@ window.addEventListener("DOMContentLoaded", async () => {
       memChart.options.scales.y.max = yLabel;
 
       addMemPoint(Number(usedGB));
+      addMemPointDoughnut(Number(usedGB), Number(availGB));
 
       memEl.textContent =
         `RAM: ${usedGB} GB used / ${totalGB} GB total ` +

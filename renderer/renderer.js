@@ -11,7 +11,7 @@ window.addEventListener("DOMContentLoaded", async () => {
   const cpuCanvas = document.getElementById("cpuChart");
   const memCanvas = document.getElementById("memChart");
   const memDoughnutCanvas = document.getElementById("memChartDoughnut");
-
+  const storageDoughnutCanvas = document.getElementById("storageChartDoughnut");
 
   if (!cpuEl || !cpuModelEl || !memEl || !cpuCanvas || !memCanvas || !memDoughnutCanvas) {
     console.error("Missing DOM elements");
@@ -170,6 +170,7 @@ window.addEventListener("DOMContentLoaded", async () => {
       }]
     },
     options: {
+      maintainAspectRatio: false,
       animation: false,
       responsive: true,
       plugins: {
@@ -182,6 +183,48 @@ window.addEventListener("DOMContentLoaded", async () => {
         title: {
           display: true,
           text: "Memory Distribution",
+          color: CHART_COLORS.text,
+          font: {
+            size: 14,
+            weight: "500"
+          }
+        }
+      }
+    }
+  });
+
+  // ---------------- STORAGE DOUGHNUT CHART ----------------
+
+  const storageDataDoughnut = [0, 0];
+  const storageLabelsDoughnut = ["Used", "Free"];
+
+  const storageChartDoughnut = new window.Chart(storageDoughnutCanvas, {
+    type: "doughnut",
+    data: {
+      labels: storageLabelsDoughnut,
+      datasets: [{
+        data: storageDataDoughnut,
+        backgroundColor: [
+          CHART_COLORS.memory.line,
+          CHART_COLORS.cpu.line
+        ],
+        borderWidth: 0
+      }]
+    },
+    options: {
+      maintainAspectRatio: false,
+      animation: false,
+      responsive: true,
+      plugins: {
+        legend: {
+          position: "bottom",
+          labels: {
+            color: CHART_COLORS.text
+          }
+        },
+        title: {
+          display: true,
+          text: "Storage Distribution",
           color: CHART_COLORS.text,
           font: {
             size: 14,
@@ -239,6 +282,15 @@ window.addEventListener("DOMContentLoaded", async () => {
     memChartDoughnut.update("none");
   }
 
+  function addStoragePointDoughnut(used, available) {
+    if (!Number.isFinite(used) || !Number.isFinite(available)) return;
+
+    storageDataDoughnut[0] = used;
+    storageDataDoughnut[1] = available;
+
+   storageChartDoughnut.update("none");
+  }
+
   // ---------------- SEND OVER DATA ----------------
   let updatingCpu = false;
   let updatingMem = false;
@@ -287,10 +339,24 @@ window.addEventListener("DOMContentLoaded", async () => {
     } finally {
       updatingMem = false;
     }
+  } 
+
+  async function updateStorageStats() {
+    try {
+      const storageInfo = await window.api.getStorageInfo();
+
+      const usedStorage = storageInfo.usedStorage;
+      const availableStorage = storageInfo.availableStorage;
+
+      addStoragePointDoughnut(usedStorage, availableStorage);
+    } catch (err) {
+      console.err("Storage update failed:", err);
+    } 
   }
 
   await updateCpuStats();
   await updateMemoryStats();
+  await updateStorageStats();
 
   setInterval(updateCpuStats, 1000);   
   setInterval(updateMemoryStats, 5000);

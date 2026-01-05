@@ -81,6 +81,29 @@ contextBridge.exposeInMainWorld('api', {
         }
       )
     })
+  },
+
+  // get storage info
+  getStorageInfo: () => {
+    return new Promise((resolve, reject) => {
+      exec(
+        "df -h /System/Volumes/Data",
+        (err, stdout) => {
+          if (err) return reject(err);
+
+          const lines = stdout.trim().split("\n");
+          const dataLine = lines[1].split(/\s+/);
+
+          const usedStorage = parseFloat(dataLine[2]);
+          const availableStorage = parseFloat(dataLine[3]);
+
+          resolve({
+            usedStorage,
+            availableStorage
+          })
+        }
+      )
+    });
   }
 });
 

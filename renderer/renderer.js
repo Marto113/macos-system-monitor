@@ -8,6 +8,7 @@ window.addEventListener("DOMContentLoaded", async () => {
   const cpuEl = document.getElementById("cpu");
   const cpuModelEl = document.getElementById("cpu-model");
   const memEl = document.getElementById("memory");
+  const resEl = document.getElementById("resources");
   const cpuCanvas = document.getElementById("cpuChart");
   const memCanvas = document.getElementById("memChart");
   const memDoughnutCanvas = document.getElementById("memChartDoughnut");
@@ -350,14 +351,28 @@ window.addEventListener("DOMContentLoaded", async () => {
 
       addStoragePointDoughnut(usedStorage, availableStorage);
     } catch (err) {
-      console.err("Storage update failed:", err);
+      console.error("Storage update failed:", err);
     } 
+  }
+
+  async function updateAppResourceUsage() {
+    try {
+      const appResourceInfo = await window.api.getAppResourceUsage();
+
+      const resources = appResourceInfo.resourceInfo;
+
+      resEl.textContent = `App resources: ${resources.cpu}% | ${resources.memoryMB}MB`;
+    } catch (err) {
+      console.error("App resources update failed:", err);
+    }
   }
 
   await updateCpuStats();
   await updateMemoryStats();
   await updateStorageStats();
+  await updateAppResourceUsage();
 
+  setInterval(updateAppResourceUsage, 1000)
   setInterval(updateCpuStats, 1000);   
   setInterval(updateMemoryStats, 5000);
 });

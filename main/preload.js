@@ -1,7 +1,6 @@
 const { contextBridge } = require('electron');
 const os = require('os');
 const { exec } = require("child_process");
-const { resolve } = require('path');
 
 contextBridge.exposeInMainWorld('api', {
   // get cpu model
@@ -104,6 +103,34 @@ contextBridge.exposeInMainWorld('api', {
         }
       )
     });
+  },
+
+  // get app resource usage info
+  getAppResourceUsage: async () => {
+    const a = await sampleOnce();
+    await new Promise(r => setTimeout(r, 300));
+    const b = await sampleOnce();
+
+    return {
+      resourceInfo: {
+        cpu: Number(((a.cpu + b.cpu) / 2).toFixed(2)),
+        memoryMB: Number(b.mem.toFixed(2))
+      }
+    };
   }
 });
 
+function sampleOnce() {
+  return new Promise((resolve, reject) => {
+    const cmd =
+      `ps -A -o %cpu,rss,comm | grep -i macos-system-monitor | ` +
+      `awk '{ cpu += $1; mem += $2 } END { printf "%.2f %.2f", cpu, mem/1024 }'`;
+
+    exec(cmd, (err, stdout) => {
+      if (err) return reject(err);
+
+      const [cpu, mem] = stdout.trim().split(" ").map(Number);
+      resolve({ cpu, mem });
+    });
+  });
+}

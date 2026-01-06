@@ -21,14 +21,32 @@ h1 {
 }
 
 .chart {
-  height: 200px;
+  height: 240px;
   border-radius: 16px;
   background-color: var(--gray-700);
-  padding: 12px;
+  padding: 24px;
   width: calc(50% - 40px);
   display: flex;
-  align-items: center;
+  flex-direction: column;
+  align-items: flex-end;
   justify-content: center;
+}
+.chart.storage {
+  align-items: center;
+}
+.chart.storage button {
+  margin-left: auto;
+}
+.chart .details-btn {
+  background-color: var(--gray-800);
+  border: 1px solid var(--gray-700);
+  color: var(--gray-300);
+  padding: 6px 12px;
+  border-radius: 4px;
+  transition: all 0.3s ease-in-out;
+}
+.chart .details-btn:hover {
+  color: var(--base);
 }
 @media screen and (max-width: 768px) {
   .chart {
@@ -51,6 +69,62 @@ h1 {
   .chart-container {
     flex-direction: column;
   }
+}
+
+.panel {
+  display: block;
+  padding: 0 16px;
+}
+.panel.hidden {
+  display: none;
+}
+
+#detail-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgb(0, 0, 0);
+  z-index: 1000;
+}
+#detail-overlay.hidden {
+  display: none;
+}
+
+#detail-panel {
+  position: fixed;
+  top: 0;
+  right: 0;
+  width: 100vw;
+  height: 100vh;
+  background: var(--gray-800);
+  z-index: 1001;
+  overflow-y: auto;
+  transform: translateX(100%);
+  transition: transform 0.25s ease;
+}
+
+.hidden {
+  pointer-events: none;
+  opacity: 0;
+}
+
+#detail-panel:not(.hidden) {
+  transform: translateX(0);
+}
+
+#detail-overlay:not(.hidden) {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+#close-panel {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  background: none;
+  border: none;
+  color: var(--gray-300);
+  font-size: 24px;
+  cursor: pointer;
 }
 
 /*# sourceMappingURL=app.css.map */

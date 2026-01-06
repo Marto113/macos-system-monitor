@@ -2,6 +2,9 @@ const { contextBridge } = require('electron');
 const os = require('os');
 const { exec } = require("child_process");
 
+let lastNetSample = null;
+let lastNetTime = null;
+
 contextBridge.exposeInMainWorld('api', {
   // get cpu model
   getCpuInfo: () => os.cpus(),
@@ -117,7 +120,51 @@ contextBridge.exposeInMainWorld('api', {
         memoryMB: Number(b.mem.toFixed(2))
       }
     };
-  }
+  },
+
+  getNetworkUsage: () => {
+  return new Promise((resolve, reject) => {
+    exec(
+      `netstat -ib | awk '$1=="en0" {print $7, $10}'`,
+      (err, stdout) => {
+        if (err) return reject(err);
+
+        const [rxBytes, txBytes] = stdout
+          .trim()
+          .split(/\s+/)
+          .map(Number);
+
+        const now = Date.now();
+
+        if (!lastNetSample) {
+          lastNetSample = { rxBytes, txBytes };
+          lastNetTime = now;
+          return resolve({
+            downloadKB: 0,
+            uploadKB: 0
+          });
+        }
+
+        const timeDiffSec = (now - lastNetTime) / 1000;
+
+        const downloadKB =
+          (rxBytes - lastNetSample.rxBytes) / 1024 / timeDiffSec;
+
+        const uploadKB =
+          (txBytes - lastNetSample.txBytes) / 1024 / timeDiffSec;
+
+        lastNetSample = { rxBytes, txBytes };
+        lastNetTime = now;
+
+        resolve({
+          downloadKB: Math.max(0, Number(downloadKB.toFixed(2))),
+          uploadKB: Math.max(0, Number(uploadKB.toFixed(2)))
+        });
+      }
+    );
+  });
+}
+
 });
 
 function sampleOnce() {

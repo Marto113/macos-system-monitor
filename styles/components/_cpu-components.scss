@@ -1,0 +1,28 @@
+.process-header,
+.process-row {
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr 1fr 1.5fr 1fr;
+  gap: 12px;
+  padding: 8px 12px;
+}
+
+.process-header {
+  font-weight: 600;
+  opacity: 0.8;
+}
+
+.process-row {
+  border-radius: 8px;
+}
+
+.process-row:hover {
+  background: rgba(255,255,255,0.05);
+}
+
+
+.process-row span:first-child,
+.process-header span:first-child {
+  overflow-wrap: anywhere;
+  word-break: break-word;
+  min-width: 0;
+}

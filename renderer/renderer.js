@@ -1,5 +1,6 @@
 import { initPanels } from "./panels.js";
 import { createCpuChart } from "./charts/cpuChart.js";
+import { initCpuDetailControls } from "./details/cpu/cpuDetailControls.js";
 import { createMemoryChart } from "./charts/memoryChart.js";
 import { createNetworkChart } from "./charts/networkChart.js";
 import { createStorageChart } from "./charts/storageChart.js";
@@ -12,6 +13,7 @@ window.addEventListener("DOMContentLoaded", async () => {
 
   // UI / panels
   initPanels();
+  initCpuDetailControls();
 
   // DOM
   const cpuEl = document.getElementById("cpu");

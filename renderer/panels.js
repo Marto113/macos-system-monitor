@@ -1,3 +1,6 @@
+import { openCpuDetail, closeCpuDetail } from "./details/cpu/cpuDetail.js";
+import { renderCpuProcessList } from "./details/cpu/cpuDetailView.js";
+
 export function initPanels() {
   const overlay = document.getElementById("detail-overlay");
   const panel = document.getElementById("detail-panel");
@@ -13,12 +16,20 @@ export function initPanels() {
     panels.forEach(p => p.classList.add("hidden"));
 
     const active = document.getElementById(`panel-${panelName}`);
-    if (active) active.classList.remove("hidden");
+    if (!active) return;
+
+    active.classList.remove("hidden");
+
+    if (panelName === "cpu") {
+      openCpuDetail(renderCpuProcessList);
+    }
   }
 
   function closePanel() {
     overlay.classList.add("hidden");
     panel.classList.add("hidden");
+
+    closeCpuDetail();
   }
 
   cards.forEach(card => {

@@ -52,12 +52,23 @@
     <section id="panel-cpu" class="panel hidden">
       <h2>CPU Details</h2>
       <p>Processes using CPU</p>
+      <button id="toggle-process-mode">Show system</button>
+
+      <div class="process-list">
+        <div class="process-header">
+          <span>App</span>
+          <span>PID</span>
+          <span>User</span>
+          <span>CPU %</span>
+          <span>CPU Time</span>
+          <span>Mem %</span>
+        </div>
+
+        <div id="cpu-process-rows" class="process-rows" data-mode="user"></div>
+      </div>
 
       <div class="panel-chart">
         <canvas id="cpuDetailChart"></canvas>
-      </div>
-
-      <div class="panel-list" id="cpu-process-list">
       </div>
     </section>
 

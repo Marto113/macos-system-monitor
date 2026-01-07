@@ -1,4 +1,5 @@
 @use "variables";
+@use "components/cpu-components";
 
 body {
   margin: 0;
@@ -32,19 +33,6 @@ h1 {
       margin-left: auto;
     }
   }
-
-  .details-btn {
-    background-color: var(--gray-800);
-    border: 1px solid var(--gray-700);
-    color: var(--gray-300);
-    padding: 6px 12px;
-    border-radius: 4px;
-    transition: all 0.3s ease-in-out;
-
-    &:hover {
-      color: var(--base);
-    }
-  }
   
   @media screen and (max-width: 768px) {
     width: calc(100% - 20px);
@@ -70,7 +58,6 @@ h1 {
 
 
 // panel
-
 .panel {
   display: block;
   padding: 0 16px;
@@ -132,4 +119,18 @@ h1 {
   color: var(--gray-300);
   font-size: 24px;
   cursor: pointer;
+}
+
+
+button {
+  background-color: var(--gray-800);
+  border: 1px solid var(--gray-700);
+  color: var(--gray-300);
+  padding: 6px 12px;
+  border-radius: 4px;
+  transition: all 0.3s ease-in-out;
+
+  &:hover {
+    color: var(--base);
+  }
 }

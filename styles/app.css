@@ -8,6 +8,34 @@
   --accent-mem: #ec715b;
 }
 
+.process-header,
+.process-row {
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr 1fr 1.5fr 1fr;
+  gap: 12px;
+  padding: 8px 12px;
+}
+
+.process-header {
+  font-weight: 600;
+  opacity: 0.8;
+}
+
+.process-row {
+  border-radius: 8px;
+}
+
+.process-row:hover {
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.process-row span:first-child,
+.process-header span:first-child {
+  overflow-wrap: anywhere;
+  word-break: break-word;
+  min-width: 0;
+}
+
 body {
   margin: 0;
   background: var(--gray-950);
@@ -36,17 +64,6 @@ h1 {
 }
 .chart.storage button {
   margin-left: auto;
-}
-.chart .details-btn {
-  background-color: var(--gray-800);
-  border: 1px solid var(--gray-700);
-  color: var(--gray-300);
-  padding: 6px 12px;
-  border-radius: 4px;
-  transition: all 0.3s ease-in-out;
-}
-.chart .details-btn:hover {
-  color: var(--base);
 }
 @media screen and (max-width: 768px) {
   .chart {
@@ -125,6 +142,18 @@ h1 {
   color: var(--gray-300);
   font-size: 24px;
   cursor: pointer;
+}
+
+button {
+  background-color: var(--gray-800);
+  border: 1px solid var(--gray-700);
+  color: var(--gray-300);
+  padding: 6px 12px;
+  border-radius: 4px;
+  transition: all 0.3s ease-in-out;
+}
+button:hover {
+  color: var(--base);
 }
 
 /*# sourceMappingURL=app.css.map */
